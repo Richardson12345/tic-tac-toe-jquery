@@ -1,0 +1,44 @@
+/*******tic-tac-toe******/
+body {
+    background: #2980B9;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #FFFFFF, #6DD5FA, #2980B9);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #FFFFFF, #6DD5FA, #2980B9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    min-height: 1350px;
+}
+
+.centered {
+    margin: 0px auto;
+}
+.gameplay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.boardRow {
+    flex: 1;
+    display: flex;
+    flex-direction: row
+}
+
+.boardColumn {
+    display: flex;
+    flex: 1;
+    border: 1px solid rebeccapurple;
+    justify-content: center;
+    align-items: center;
+    font-size: 80px;
+}
+
+.boardColumn:hover {
+    background: #b3ecff; 
+    cursor: pointer;
+}
+/*******tic-tac-toe END******/
