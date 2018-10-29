@@ -13,18 +13,19 @@ $(document).ready(function() {
 	player.append(x)
 	xScore.append(x_win)
 	oScore.append(o_win)
-
-	for (let z = 0; z < boardArr.length; z ++) {
-		board.append(`<div class="boardRow" id="row${z}"></div>`)
-		let currentRow = boardArr[z]
-		let currentRowDiv = $(`#row${z}`)
-		for (let k = 0; k < currentRow.length; k ++) {
-			let data = currentRow[k]
-			currentRowDiv.append(`<div class="boardColumn" data-count="${z}-${k}"></div>`)
+ 	function createBoard () {
+		for (let z = 0; z < boardArr.length; z ++) {
+			board.append(`<div class="boardRow" id="row${z}"></div>`)
+			let currentRow = boardArr[z]
+			let currentRowDiv = $(`#row${z}`)
+			for (let k = 0; k < currentRow.length; k ++) {
+				let data = currentRow[k]
+				currentRowDiv.append(`<div class="boardColumn" data-count="${z}-${k}"></div>`)
+			}
 		}
 	}
-
-	$(".boardColumn").click(function (e) {
+ 	createBoard ();
+ 	$(".boardColumn").click(function (e) {
 		let currentBox = e.currentTarget
 		let position = currentBox.dataset.count.split('-')
 		let row = position[0]
@@ -45,78 +46,59 @@ $(document).ready(function() {
 			}
 		}
 	})
-
-	$("#restart").click(function (e) {
+ 	$("#restart").click(function (e) {
 		clearBoard()
 	})
-
-	$("#reset").click(function (e) {
+ 	$("#reset").click(function (e) {
 		window.location.reload()
 	})
-
-	function clearBoard () {
+ 	function clearBoard () {
 		boardArr = [['','',''], ['','',''], ['','','']]
 		let columns = $(".boardColumn")
 		columns.empty()
 	}
-
-	function winnerChecker () {
-		let xWin = 'XXX'
-		let oWin= 'OOO'
-		let diagonalOne = `${boardArr[0][0]}${boardArr[1][1]}${boardArr[2][2]}`;
-        let diagonalTwo = `${boardArr[0][2]}${boardArr[1][1]}${boardArr[2][0]}`;
-		let verticalOne = `${boardArr[0][0]}${boardArr[1][0]}${boardArr[2][0]}`;
-        let verticalTwo = `${boardArr[0][1]}${boardArr[1][1]}${boardArr[2][1]}`;
-		let verticalThree = `${boardArr[0][2]}${boardArr[1][2]}${boardArr[2][2]}`;
-		if (
-			verticalOne == xWin ||
-            verticalOne == oWin ||
-            verticalTwo == xWin ||
-            verticalTwo == oWin || 
-            verticalThree == xWin ||
-            verticalThree == oWin ||
-            diagonalOne == xWin ||
-            diagonalOne == oWin ||
-            diagonalTwo == xWin ||
-            diagonalTwo == oWin
-		) {
-			if (turn == 1) {
-				swal('congrats', 'player X won!', 'success')
-				x_win ++
-				xScore.text(x_win)
-				clearBoard()
-			} else {
-				swal('congrats', 'player O won!', 'success')
-				o_win ++
-				oScore.text(o_win)
-				clearBoard()
+ 	function displayWinner () {
+		if (turn == 1) {
+			swal('congrats', 'player X won!', 'success')
+			x_win ++
+			xScore.text(x_win)
+			clearBoard()
+		} else {
+			swal('congrats', 'player O won!', 'success')
+			o_win ++
+			oScore.text(o_win)
+			clearBoard()
+		}
+	}
+ 	function winnerChecker () {
+		let xWin = ''
+		let oWin = ''
+ 		for (let z = 0; z < boardArr.length; z++) {
+			xWin += 'X'
+			oWin += 'O	'
+		}
+ 		let diagonalLeft = '';
+		let diagonalRight = '';
+ 		for (let z = 0; z < boardArr.length; z++) {
+			let length = boardArr.length - 1
+			let horrizontal = boardArr[z].join('')
+			let verticalArr = ''
+			diagonalLeft += boardArr[z][length - z]
+			diagonalRight += boardArr[z][z]
+			for (let k = 0; k < boardArr.length; k++) {
+				verticalArr += boardArr[k][z]
+			}
+			if (horrizontal == xWin || horrizontal == oWin || verticalArr == xWin || verticalArr == oWin) {
+				displayWinner()
+				break;
 			}
 		}
-
-		for (let z = 0; z < boardArr.length; z ++) {
-            if ( boardArr[z].indexOf('') == -1 ) {
-				let currentBoard = boardArr[z]
-				let horizontalBoard = boardArr[z].join('')
-				if (horizontalBoard == xWin || horizontalBoard == oWin) {
-					if (turn == 1) {
-						swal('congrats', 'player X won!', 'success')
-						x_win ++
-						xScore.text(x_win)
-						clearBoard()
-					} else {
-						swal('congrats', 'player O won!', 'success')
-						o_win ++
-						oScore.text(o_win)
-						clearBoard()
-					}
-				}
-			} 
+ 		if (diagonalLeft == xWin || diagonalLeft == oWin || diagonalRight == xWin || diagonalRight == oWin) {
+			displayWinner()
 		}
-		
-		checkDraw()
+ 		checkDraw()
 	}
-
-	function checkDraw () {
+ 	function checkDraw () {
 		let reset = true
 		boardArr.forEach((row) => {
 			if (row.indexOf('') !== -1) {
